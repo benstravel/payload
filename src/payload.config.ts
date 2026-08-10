@@ -61,6 +61,10 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // TODO: switch to committed migrations (payload migrate:create) once
+    // there's real data to protect. For now the production DB is empty
+    // and has no migrations, so force schema sync on boot to unblock.
+    push: true,
   }),
   collections: [Pages, Posts, Media, Categories, Users],
   cors: [getServerSideURL()].filter(Boolean),
