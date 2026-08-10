@@ -3,6 +3,10 @@ import { getPayload } from 'payload'
 import config from '@payload-config'
 import { unstable_cache } from 'next/cache'
 
+// The build environment has no network access to Postgres, so this must
+// render on-demand per request instead of being generated at build time.
+export const dynamic = 'force-dynamic'
+
 const getPostsSitemap = unstable_cache(
   async () => {
     const payload = await getPayload({ config })

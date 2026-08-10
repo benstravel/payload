@@ -9,7 +9,9 @@ import React from 'react'
 import PageClient from './page.client'
 import { notFound } from 'next/navigation'
 
-export const revalidate = 600
+// force-dynamic (not revalidate-based ISR): the build environment has no
+// network access to Postgres, so this must render on-demand per request.
+export const dynamic = 'force-dynamic'
 
 type Args = {
   params: Promise<{
@@ -69,20 +71,9 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
   }
 }
 
+// Skipped: the build environment has no network access to Postgres, so this
+// renders on-demand per request (dynamicParams defaults to true) instead of
+// pre-rendering at build time.
 export async function generateStaticParams() {
-  const payload = await getPayload({ config: configPromise })
-  const { totalDocs } = await payload.count({
-    collection: 'posts',
-    overrideAccess: false,
-  })
-
-  const totalPages = Math.ceil(totalDocs / 10)
-
-  const pages: { pageNumber: string }[] = []
-
-  for (let i = 1; i <= totalPages; i++) {
-    pages.push({ pageNumber: String(i) })
-  }
-
-  return pages
+  return []
 }

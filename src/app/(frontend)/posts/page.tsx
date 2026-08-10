@@ -8,8 +8,9 @@ import { getPayload } from 'payload'
 import React from 'react'
 import PageClient from './page.client'
 
-export const dynamic = 'force-static'
-export const revalidate = 600
+// force-dynamic (not force-static): the build environment has no network
+// access to Postgres, so this must render on-demand per request.
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const payload = await getPayload({ config: configPromise })
